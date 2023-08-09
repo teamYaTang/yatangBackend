@@ -1,0 +1,19 @@
+server:
+  port: 8080
+# database 연동 설정
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yatangdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: kaya
+    password: pitang990203
+  thymeleaf:
+    cache: false
+
+  # spring data jpa 설정
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
