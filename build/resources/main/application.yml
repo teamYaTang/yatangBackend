@@ -7,19 +7,13 @@ spring:
     url: jdbc:mysql://localhost:3306/yatangdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: kaya
     password: pitang990203
-    hikari:
-      jdbc-url=jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL:thymeleaf:
+  thymeleaf:
     cache: false
+
   # spring data jpa 설정
   jpa:
 #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect   # version 다름
-#    database-platform: org.hibernate.dialect.MySQL5Dialect         # 수정
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-        storage_engine: innodb
-
-
+    database-platform: org.hibernate.dialect.MySQL8Dialect         # 수정
 #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQL5Dialect
