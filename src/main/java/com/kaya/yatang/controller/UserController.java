@@ -21,7 +21,8 @@ public class UserController {
     @PostMapping("/account/register")
     public String register(@ModelAttribute UserDTO userDTO) {
         userService.save(userDTO);
-        return "home";
+//        UserDTO registerResult = userService.save(userDTO);
+        return "nickname";
     }
 
     // 로그인 페이지
