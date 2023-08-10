@@ -17,11 +17,11 @@ public class UserDTO {
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(userDTO.getId());
-        userDTO.setUsername(userDTO.getUsername());
-        userDTO.setUserid(userDTO.getUserid());
-        userDTO.setUserpw(userDTO.getUserpw());
-        userDTO.setNickname(userDTO.getNickname());
+        userDTO.setId(userEntity.getId());
+        userDTO.setUsername(userEntity.getUsername());
+        userDTO.setUserid(userEntity.getUserid());
+        userDTO.setUserpw(userEntity.getUserpw());
+        userDTO.setNickname(userEntity.getNickname());
         return userDTO;
     }
 }

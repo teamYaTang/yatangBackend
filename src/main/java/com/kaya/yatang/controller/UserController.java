@@ -21,7 +21,7 @@ public class UserController {
     @PostMapping("/account/register")
     public String register(@ModelAttribute UserDTO userDTO) {
         userService.save(userDTO);
-        return "login";
+        return "home";
     }
 
     // 로그인 페이지
@@ -38,7 +38,7 @@ public class UserController {
             return "main";
         } else {
             // 실패!
-            return "login";
+            return "home";
         }
     }
 
@@ -66,7 +66,7 @@ public class UserController {
     }
 
     // 아이디 체크
-    @PostMapping("/member/userid-check")
+    @PostMapping("/account/userid-check")
     public @ResponseBody String useridCheck(@RequestParam("userid") String userid) {
         System.out.println("userid = " + userid);
         String checkResult = userService.useridCheck(userid);
