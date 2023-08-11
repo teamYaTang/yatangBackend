@@ -26,22 +26,6 @@ public class UserController {
         return "nickname";
     }
 
-    // 닉네임 설정
-    @GetMapping("/account/nickname")
-    public String nicknameForm(HttpSession session, Model model) {
-        String myUserid = (String) session.getAttribute("loginId");
-//        String myName = (String) session.getAttribute("loginName");
-        UserDTO userDTO = userService.nicknameForm(myUserid);
-        model.addAttribute("nickname", userDTO);
-        return "nickname";
-    }
-
-    @PostMapping("/account/nickname")
-    public String nickname(@ModelAttribute UserDTO userDTO) {
-        userService.nickname(userDTO);
-        return "redirect:/user/" + userDTO.getId();
-    }
-
     // 로그인 페이지
     @GetMapping("/account/login")
     public String loginForm() { return "login"; }
@@ -58,6 +42,22 @@ public class UserController {
             // 실패!
             return "home";
         }
+    }
+
+    // 닉네임 설정
+    @GetMapping("/account/nickname")
+    public String nicknameForm(HttpSession session, Model model) {
+        String myUserid = (String) session.getAttribute("loginId");
+//        String myName = (String) session.getAttribute("loginName");
+        UserDTO userDTO = userService.nicknameForm(myUserid);
+        model.addAttribute("nickname", userDTO);
+        return "nickname";
+    }
+
+    @PostMapping("/account/nickname")
+    public String nickname(@ModelAttribute UserDTO userDTO) {
+        userService.nickname(userDTO);
+        return "redirect:/user/" + userDTO.getId();
     }
 
     // 로그아웃
