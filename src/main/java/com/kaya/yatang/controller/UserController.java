@@ -34,7 +34,7 @@ public class UserController {
     public String login(@ModelAttribute UserDTO userDTO, HttpSession session) {
         UserDTO loginResult = userService.login(userDTO);
         if (loginResult != null) {
-            // 성공!
+            // 성공! 닉네임 있을 때 -> 냉장고
             session.setAttribute("loginId", loginResult.getUserid());
 //            session.setAttribute("loginName", loginResult.getUsername());
             return "main";
