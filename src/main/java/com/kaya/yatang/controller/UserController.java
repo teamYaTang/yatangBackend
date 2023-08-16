@@ -23,7 +23,7 @@ public class UserController {
         userService.save(userDTO);
 //        UserDTO registerResult = userService.save(userDTO);
 
-        return "nickname";
+        return "home";
     }
 
     // 로그인 페이지
@@ -34,7 +34,7 @@ public class UserController {
     public String login(@ModelAttribute UserDTO userDTO, HttpSession session) {
         UserDTO loginResult = userService.login(userDTO);
         if (loginResult != null) {
-            // 성공! 닉네임 있을 때 -> 냉장고
+            // 성공! 닉네임 있을 때 -> 냉장고 & 닉네임 없을 때 -> 닉네임
             session.setAttribute("loginId", loginResult.getUserid());
 //            session.setAttribute("loginName", loginResult.getUsername());
             return "main";
