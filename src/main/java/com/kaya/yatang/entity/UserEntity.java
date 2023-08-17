@@ -40,9 +40,9 @@ public class UserEntity {
     public static UserEntity toUpdateUserEntity(UserDTO userDTO) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userDTO.getId());
-//        userEntity.setUsername(userDTO.getUsername());
-//        userEntity.setUserid(userDTO.getUserid());
-//        userEntity.setUserpw(userDTO.getUserpw());
+        userEntity.setUsername(userDTO.getUsername());
+        userEntity.setUserid(userDTO.getUserid());
+        userEntity.setUserpw(userDTO.getUserpw());
         userEntity.setNickname(userDTO.getNickname());
         return userEntity;
     }

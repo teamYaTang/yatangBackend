@@ -5,6 +5,8 @@ import com.kaya.yatang.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -57,8 +59,15 @@ public class UserController {
     @PostMapping("/account/nickname")
     public String nickname(@ModelAttribute UserDTO userDTO) {
         userService.nickname(userDTO);
-        return "redirect:/user/" + userDTO.getId();
+//        return "redirect:/user/" + userDTO.getId();
+        return "main";
     }
+
+//    @GetMapping("/account/nickname")
+//    public String nicknameForm(Model model, Authentication authentication) {
+//        UserDet
+//    }
+
 
     // 로그아웃
     @GetMapping("/account/logout")
