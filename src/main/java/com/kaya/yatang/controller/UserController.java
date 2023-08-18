@@ -52,7 +52,7 @@ public class UserController {
         String myUserid = (String) session.getAttribute("loginId");
 //        String myName = (String) session.getAttribute("loginName");
         UserDTO userDTO = userService.nicknameForm(myUserid);
-        model.addAttribute("nickname", userDTO);
+        model.addAttribute("setNickname", userDTO);
         return "nickname";
     }
 

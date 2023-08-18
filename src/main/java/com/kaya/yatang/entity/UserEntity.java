@@ -33,6 +33,7 @@ public class UserEntity {
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setUserid(userDTO.getUserid());
         userEntity.setUserpw(userDTO.getUserpw());
+        userEntity.setNickname(userDTO.getNickname());
         return userEntity;
     }
 
