@@ -47,5 +47,4 @@ public class UserEntity {
         userEntity.setNickname(userDTO.getNickname());
         return userEntity;
     }
-
 }
