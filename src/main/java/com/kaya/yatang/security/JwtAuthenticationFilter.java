@@ -1,4 +1,4 @@
-package com.kaya.yatang.config;
+package com.kaya.yatang.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

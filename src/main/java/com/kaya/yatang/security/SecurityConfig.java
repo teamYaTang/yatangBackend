@@ -1,9 +1,7 @@
-package com.kaya.yatang.config;
+package com.kaya.yatang.security;
 
-import com.kaya.yatang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,10 +34,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .httpBasic().disable() // rest api 만을 고려하여 기본설정 해제
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 안함
-//                .and()
+                .httpBasic().disable() // rest api 만을 고려하여 기본설정 해제
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 안함
+                .and()
                 .authorizeRequests() // 요청에 대한 사용 권한 체크
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/post/**").authenticated()
