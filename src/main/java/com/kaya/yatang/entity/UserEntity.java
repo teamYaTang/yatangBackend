@@ -1,10 +1,12 @@
 package com.kaya.yatang.entity;
 
+import com.kaya.yatang.domain.Role;
 import com.kaya.yatang.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+//import org.springframework.context.annotation.Role;
 
 @Entity
 @Setter
@@ -26,6 +28,9 @@ public class UserEntity {
 
     @Column
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // 회원가입
     public static UserEntity toUserEntity(UserDTO userDTO) {
