@@ -25,8 +25,8 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class UserApiController {
 
-    @Autowired
-    private final BCryptPasswordEncoder passwordEncoder;
+//    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -47,18 +47,20 @@ public class UserApiController {
     // 로그인
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> user) {
-//        Member member = memberRepository.findByEmail(user.get("email"))
-//                .orElseThrow(() -> new IllegalArgumentException("가입 되지 않은 이메일입니다."));
-//        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-//            throw new IllegalArgumentException("이메일 또는 비밀번호가 맞지 않습니다.");
-//        }
-//
-//        return jwtTokenProvider.createToken(member.getEmail(), member.getRole());
+
         UserEntity userEntity = userRepository.findByUserid(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디입니다."));
+
+//        암호화 되지 않은 비밀번호
+//        if (!userEntity.getUserpw().equals(user.get("userpw"))) {
+//            throw new IllegalArgumentException("아이디 또는 비밀번호가 맞지 않습니다.");
+//        }
+
+//        암호화 된 비밀번호
         if (!passwordEncoder.matches(user.get("userpw"), userEntity.getUserpw())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 맞지 않습니다.");
         }
+
         return jwtTokenProvider.createToken(userEntity.getUserid(), userEntity.getRole());
     }
 }

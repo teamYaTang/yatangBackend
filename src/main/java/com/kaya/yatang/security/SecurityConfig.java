@@ -39,10 +39,10 @@ public class SecurityConfig {
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
-////                .httpBasic().disable() // rest api 만을 고려하여 기본설정 해제
-////                .csrf().disable()
-////                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 안함
-////                .and()
+//                .httpBasic().disable() // rest api 만을 고려하여 기본설정 해제
+//                .csrf().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 안함
+//                .and()
 //                .authorizeRequests() // 요청에 대한 사용 권한 체크
 //                .requestMatchers("/admin/**").hasRole("ADMIN")
 //                .requestMatchers("/api/post/**").authenticated()
@@ -56,16 +56,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                    .requestMatchers(new AntPathRequestMatcher("/api/hello")
-                            , new AntPathRequestMatcher("/api/authenticate")
-                            , new AntPathRequestMatcher("/api/signup")
-                            , new AntPathRequestMatcher("/**")).permitAll()
-//                    .anyRequest().authenticated()
-                    .anyRequest().permitAll());
+                .httpBasic().disable() // rest api 만을 고려하여 기본설정 해제
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 안함
+                .and()
+                .authorizeRequests() // 요청에 대한 사용 권한 체크
+                .requestMatchers(new AntPathRequestMatcher("/api/**")
+                , new AntPathRequestMatcher("/admin/**")
+                , new AntPathRequestMatcher("/api/post/**")).permitAll()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣음
         return http.build();
     }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .httpBasic().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+//            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+//                    .requestMatchers(new AntPathRequestMatcher("/api/hello")
+//                            , new AntPathRequestMatcher("/api/register")
+//                            , new AntPathRequestMatcher("/api/login")
+//                            , new AntPathRequestMatcher("/**")).permitAll()
+////                    .anyRequest().authenticated()
+//                    .anyRequest().permitAll());
+//        return http.build();
+//    }
 
 
 
