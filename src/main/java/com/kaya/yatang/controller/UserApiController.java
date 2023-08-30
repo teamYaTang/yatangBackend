@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class UserApiController {
 
-//    @Autowired
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     private final JwtTokenProvider jwtTokenProvider;
