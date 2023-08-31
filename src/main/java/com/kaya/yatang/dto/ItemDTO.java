@@ -10,5 +10,5 @@ import lombok.*;
 public class ItemDTO {
     private long id;
     private String itemname;
-//    private String userid;
+    private String userid;
 }
