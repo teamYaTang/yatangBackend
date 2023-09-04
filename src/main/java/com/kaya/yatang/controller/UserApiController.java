@@ -48,8 +48,12 @@ public class UserApiController {
     @PostMapping("/login")
     public String login(@RequestBody Map<String, String> user) {
 
+        System.out.println(user);
+
         UserEntity userEntity = userRepository.findByUserid(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디입니다."));
+
+        System.out.println(user.get("userid"));
 
 //        암호화 되지 않은 비밀번호
 //        if (!userEntity.getUserpw().equals(user.get("userpw"))) {
@@ -59,6 +63,9 @@ public class UserApiController {
 //        암호화 된 비밀번호
         if (!passwordEncoder.matches(user.get("userpw"), userEntity.getUserpw())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 맞지 않습니다.");
+        } else {
+            System.out.println(user.get("userid"));
+            System.out.println(user.get("userpw"));
         }
 
         return jwtTokenProvider.createToken(userEntity.getUserid(), userEntity.getRole());
