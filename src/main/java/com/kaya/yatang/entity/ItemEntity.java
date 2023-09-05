@@ -16,6 +16,6 @@ public class ItemEntity {
     @Column
     private String itemname;
 
-//    @Column
-//    private String userid;
+    @Column
+    private String userid;
 }
