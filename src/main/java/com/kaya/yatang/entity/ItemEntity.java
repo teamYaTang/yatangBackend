@@ -13,9 +13,7 @@ public class ItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String itemname;
-
-    @Column
-    private String userid;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userid")
+    UserEntity userEntity;
 }
