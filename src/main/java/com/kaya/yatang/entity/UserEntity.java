@@ -1,6 +1,7 @@
 package com.kaya.yatang.entity;
 
 import com.kaya.yatang.domain.Role;
+import com.kaya.yatang.domain.fridge.FridgeEntity;
 import com.kaya.yatang.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.Generated;
@@ -31,6 +32,9 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne(mappedBy = "user")
+    private FridgeEntity fridgeEntity;
 
     // 회원가입
     public static UserEntity toUserEntity(UserDTO userDTO) {
