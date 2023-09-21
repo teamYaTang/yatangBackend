@@ -26,4 +26,10 @@ public class FridgeEntity {
     @OneToMany(fetch = FetchType.EAGER)
     private List<ItemEntity> items = new ArrayList<>();
 
+    public static FridgeEntity createFridge(UserEntity userEntity){
+        FridgeEntity fridgeEntity = new FridgeEntity();
+        fridgeEntity.userEntity = userEntity;
+
+        return fridgeEntity;
+    }
 }
