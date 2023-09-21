@@ -1,4 +1,7 @@
 package com.kaya.yatang.domain.fridge;
 
-public interface FridgeRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface FridgeRepository extends JpaRepository<FridgeEntity, Integer> {
+    FridgeEntity findByUserid(int userid);
 }
