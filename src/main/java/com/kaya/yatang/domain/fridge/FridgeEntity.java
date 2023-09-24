@@ -1,6 +1,6 @@
 package com.kaya.yatang.domain.fridge;
 
-import com.kaya.yatang.entity.ItemEntity;
+import com.kaya.yatang.domain.item.ItemEntity;
 import com.kaya.yatang.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
