@@ -27,7 +27,7 @@ public class FridgeService {
     // 장바구니 생성
     @Transactional
     public void addFridge(UserEntity userEntity, ItemEntity itemEntity){
-        FridgeEntity fridgeEntity = fridgeRepository.findByUserid(userEntity.getId());
+        FridgeEntity fridgeEntity = fridgeRepository.findByUserId(userEntity.getId());
 
         // Fridge가 비어있으면 생성
         if (fridgeEntity == null) {
