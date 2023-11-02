@@ -25,7 +25,7 @@ public class ItemEntity {
 
 //  여러개의 아이템이 하나의 냉장고에 존재
     @ManyToOne
-    @JoinColumn(name = "fridgeid")
+    @JoinColumn(name = "fridge_id")
     private FridgeEntity fridgeEntity;
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")

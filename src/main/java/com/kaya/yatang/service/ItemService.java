@@ -15,7 +15,7 @@ public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
-    public ItemEntity save(long userId, ItemEntity itemEntity) {
+    public ItemEntity save(Long userId, ItemEntity itemEntity) {
         FridgeEntity fridgeEntity = fridgeRepository.findByUserId(userId);
         itemEntity.setFridgeEntity(fridgeEntity);
         return itemRepository.save(itemEntity);
