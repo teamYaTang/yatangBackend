@@ -22,8 +22,8 @@ public class FridgeEntity {
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "userid")
-    UserEntity userEntity;
+    @JoinColumn(name = "user_id")
+    UserEntity user;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<ItemEntity> itemEntityList = new ArrayList<>();
@@ -38,7 +38,7 @@ public class FridgeEntity {
 
     public static FridgeEntity createFridge(UserEntity userEntity){
         FridgeEntity fridgeEntity = new FridgeEntity();
-        fridgeEntity.userEntity = userEntity;
+        fridgeEntity.user = userEntity;
 
         return fridgeEntity;
     }
