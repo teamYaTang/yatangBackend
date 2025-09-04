@@ -3,21 +3,38 @@ server:
 # database 연동 설정
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yatangdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: com.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/yatangdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: kaya
-    password: pitang990203
+    password: 123
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    databasePlatform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   thymeleaf:
     cache: false
 
   # spring data jpa 설정
-  jpa:
+#  jpa:
 #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect   # version 다름
-    database-platform: org.hibernate.dialect.MySQL8Dialect         # 수정
+#    database-platform: org.hibernate.dialect.MySQL8Dialect         # 수정
 #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQL5Dialect
-    open-in-view: false
-    show-sql: true
-    hibernate:
-      ddl-auto: update
+#    open-in-view: false
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update

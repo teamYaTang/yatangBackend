@@ -1,23 +1,27 @@
 server:
   port: 8080
-# database 연동 설정
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    # JPA View Parameter
+    org.hibernate.type.descriptor.sql: trace
+
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yatangdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: kaya
-    password: pitang990203
-  thymeleaf:
-    cache: false
+  config:
+    import:
+      - classpath:application-data-source.yml
+
+
 
   # spring data jpa 설정
-  jpa:
+#  jpa:
 #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect   # version 다름
-    database-platform: org.hibernate.dialect.MySQL8Dialect         # 수정
+#    database-platform: org.hibernate.dialect.MySQL8Dialect         # 수정
 #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQL5Dialect
-    open-in-view: false
-    show-sql: true
-    hibernate:
-      ddl-auto: update
+#    open-in-view: false
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update

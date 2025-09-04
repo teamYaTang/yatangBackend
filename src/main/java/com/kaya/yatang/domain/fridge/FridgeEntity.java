@@ -25,6 +25,7 @@ public class FridgeEntity {
     @JoinColumn(name = "user_id")
     UserEntity user;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.EAGER)
     private List<ItemEntity> itemEntityList = new ArrayList<>();
 
