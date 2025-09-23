@@ -1,15 +1,13 @@
 package com.kaya.yatang.service;
 
 import com.kaya.yatang.dto.UserDTO;
-import com.kaya.yatang.entity.UserEntity;
-import com.kaya.yatang.repository.UserRepository;
+import com.kaya.yatang.db.entity.User;
+import com.kaya.yatang.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -22,15 +20,15 @@ public class UserService {
 
     public void save(UserDTO userDTO) {
         userDTO.setUserpw(passwordEncoder.encode(userDTO.getUserpw()));
-        UserEntity userEntity = UserEntity.toUserEntity(userDTO);
+        User userEntity = User.toUserEntity(userDTO);
         userRepository.save(userEntity);
     }
 
     public UserDTO login(UserDTO userDTO) {
-        Optional<UserEntity> byUserid = userRepository.findByUserid(userDTO.getUserid());
+        Optional<User> byUserid = userRepository.findByUserid(userDTO.getUserid());
 
         if (byUserid.isPresent()) {
-            UserEntity userEntity = byUserid.get();
+            User userEntity = byUserid.get();
 
             if (passwordEncoder.matches(userDTO.getUserpw(), userEntity.getUserpw())) {
 //            if (userEntity.getUserpw().equals(userDTO.getUserpw())) {     // 암호화 X
@@ -47,7 +45,7 @@ public class UserService {
     }
 
     public UserDTO findById(Long id) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
+        Optional<User> optionalUserEntity = userRepository.findById(id);
         if (optionalUserEntity.isPresent()) {
             return UserDTO.toUserDTO(optionalUserEntity.get());
         } else {
@@ -56,7 +54,7 @@ public class UserService {
     }
 
     public UserDTO nicknameForm(String myUserid) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findByUserid(myUserid);
+        Optional<User> optionalUserEntity = userRepository.findByUserid(myUserid);
         if (optionalUserEntity.isPresent()) {
             return UserDTO.toUserDTO(optionalUserEntity.get());
         } else {
@@ -65,11 +63,11 @@ public class UserService {
     }
 
     public void nickname(UserDTO userDTO) {
-        userRepository.save(UserEntity.toUpdateUserEntity(userDTO));
+        userRepository.save(User.toUpdateUserEntity(userDTO));
     }
 
     public String useridCheck(String userid) {
-        Optional<UserEntity> byUserid = userRepository.findByUserid(userid);
+        Optional<User> byUserid = userRepository.findByUserid(userid);
         if (byUserid.isPresent()) {
             return null;
         } else {

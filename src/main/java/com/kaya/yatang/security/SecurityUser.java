@@ -1,19 +1,18 @@
 package com.kaya.yatang.security;
 
-import com.kaya.yatang.entity.UserEntity;
+import com.kaya.yatang.db.entity.User;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 
-public class SecurityUser extends User {
-    private UserEntity userEntity;
+public class SecurityUser extends org.springframework.security.core.userdetails.User {
+    private User userEntity;
 
-    public SecurityUser(UserEntity userEntity) {
+    public SecurityUser(User userEntity) {
         super(userEntity.getUserid().toString(), userEntity.getUserpw(),
                 AuthorityUtils.createAuthorityList(userEntity.getRole().toString()));
         this.userEntity = userEntity;
     }
 
-    public UserEntity userEntity() {
+    public User userEntity() {
         return userEntity;
     }
 }

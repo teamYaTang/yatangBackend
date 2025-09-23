@@ -1,15 +1,11 @@
 package com.kaya.yatang.controller;
 
-import com.kaya.yatang.domain.Role;
-import com.kaya.yatang.dto.UserDTO;
-import com.kaya.yatang.entity.UserEntity;
-import com.kaya.yatang.repository.UserRepository;
+import com.kaya.yatang.db.entity.User;
+import com.kaya.yatang.db.repository.UserRepository;
 import com.kaya.yatang.security.JwtTokenProvider;
 import com.kaya.yatang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,7 +44,7 @@ public class UserApiController {
 
         System.out.println(user);
 
-        UserEntity userEntity = userRepository.findByUserid(user.get("userid"))
+        User userEntity = userRepository.findByUserid(user.get("userid"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디입니다."));
 
         System.out.println(user.get("userid"));

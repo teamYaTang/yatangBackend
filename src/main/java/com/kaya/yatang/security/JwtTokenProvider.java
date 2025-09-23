@@ -1,6 +1,6 @@
 package com.kaya.yatang.security;
 
-import com.kaya.yatang.domain.Role;
+import com.kaya.yatang.code.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

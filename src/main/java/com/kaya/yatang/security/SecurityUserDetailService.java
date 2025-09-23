@@ -1,7 +1,7 @@
 package com.kaya.yatang.security;
 
-import com.kaya.yatang.entity.UserEntity;
-import com.kaya.yatang.repository.UserRepository;
+import com.kaya.yatang.db.entity.User;
+import com.kaya.yatang.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +18,11 @@ public class SecurityUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        Optional<UserEntity> optional = userRepository.findByUserid(userid);
+        Optional<User> optional = userRepository.findByUserid(userid);
         if(!optional.isPresent()) {
             throw new UsernameNotFoundException(userid + " 사용자 없음");
         } else {
-            UserEntity userEntity = optional.get();
+            User userEntity = optional.get();
             return new SecurityUser(userEntity);
         }
     }

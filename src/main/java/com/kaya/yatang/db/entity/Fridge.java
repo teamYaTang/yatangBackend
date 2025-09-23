@@ -1,7 +1,6 @@
-package com.kaya.yatang.domain.fridge;
+package com.kaya.yatang.db.entity;
 
 import com.kaya.yatang.domain.item.ItemEntity;
-import com.kaya.yatang.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,14 +15,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class FridgeEntity {
+public class Fridge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    UserEntity user;
+    User user;
 
     @Builder.Default
     @OneToMany(fetch = FetchType.EAGER)
@@ -37,8 +36,8 @@ public class FridgeEntity {
         this.createDate = LocalDate.now();
     }
 
-    public static FridgeEntity createFridge(UserEntity userEntity){
-        FridgeEntity fridgeEntity = new FridgeEntity();
+    public static Fridge createFridge(User userEntity){
+        Fridge fridgeEntity = new Fridge();
         fridgeEntity.user = userEntity;
 
         return fridgeEntity;

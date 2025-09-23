@@ -1,10 +1,8 @@
-package com.kaya.yatang.entity;
+package com.kaya.yatang.db.entity;
 
-import com.kaya.yatang.domain.Role;
-import com.kaya.yatang.domain.fridge.FridgeEntity;
+import com.kaya.yatang.code.Role;
 import com.kaya.yatang.dto.UserDTO;
 import jakarta.persistence.*;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 //import org.springframework.context.annotation.Role;
@@ -13,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Table(name = "users")
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,11 +32,11 @@ public class UserEntity {
     private Role role;
 
     @OneToOne(mappedBy = "user")
-    private FridgeEntity fridgeEntity;
+    private Fridge fridgeEntity;
 
     // 회원가입
-    public static UserEntity toUserEntity(UserDTO userDTO) {
-        UserEntity userEntity = new UserEntity();
+    public static User toUserEntity(UserDTO userDTO) {
+        User userEntity = new User();
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setUserid(userDTO.getUserid());
         userEntity.setUserpw(userDTO.getUserpw());
@@ -47,8 +45,8 @@ public class UserEntity {
     }
 
     // 닉네임 설정
-    public static UserEntity toUpdateUserEntity(UserDTO userDTO) {
-        UserEntity userEntity = new UserEntity();
+    public static User toUpdateUserEntity(UserDTO userDTO) {
+        User userEntity = new User();
         userEntity.setId(userDTO.getId());
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setUserid(userDTO.getUserid());

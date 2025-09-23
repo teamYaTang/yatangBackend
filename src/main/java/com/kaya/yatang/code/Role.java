@@ -1,4 +1,4 @@
-package com.kaya.yatang.domain;
+package com.kaya.yatang.code;
 
 import lombok.Getter;
 

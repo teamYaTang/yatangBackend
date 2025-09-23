@@ -1,6 +1,6 @@
 package com.kaya.yatang.dto;
 
-import com.kaya.yatang.entity.UserEntity;
+import com.kaya.yatang.db.entity.User;
 import lombok.*;
 
 @Getter
@@ -15,7 +15,7 @@ public class UserDTO {
     private String userpw;
     private String nickname;
 
-    public static UserDTO toUserDTO(UserEntity userEntity) {
+    public static UserDTO toUserDTO(User userEntity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userEntity.getId());
         userDTO.setUsername(userEntity.getUsername());

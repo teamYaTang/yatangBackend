@@ -1,11 +1,9 @@
 package com.kaya.yatang.service;
 
-import com.kaya.yatang.domain.fridge.FridgeEntity;
-import com.kaya.yatang.domain.fridge.FridgeRepository;
+import com.kaya.yatang.db.entity.Fridge;
+import com.kaya.yatang.db.repository.FridgeRepository;
 import com.kaya.yatang.domain.item.ItemEntity;
 import com.kaya.yatang.domain.item.ItemRepository;
-import com.kaya.yatang.entity.UserEntity;
-import com.kaya.yatang.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ItemService {
@@ -16,7 +14,7 @@ public class ItemService {
     private ItemRepository itemRepository;
 
     public ItemEntity save(Long userId, ItemEntity itemEntity) {
-        FridgeEntity fridgeEntity = fridgeRepository.findByUserId(userId);
+        Fridge fridgeEntity = fridgeRepository.findByUserId(userId);
         itemEntity.setFridgeEntity(fridgeEntity);
         return itemRepository.save(itemEntity);
     }

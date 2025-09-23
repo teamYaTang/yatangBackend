@@ -1,8 +1,6 @@
 package com.kaya.yatang.domain.item;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.kaya.yatang.domain.fridge.FridgeEntity;
-import com.sun.istack.NotNull;
+import com.kaya.yatang.db.entity.Fridge;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +24,7 @@ public class ItemEntity {
 //  여러개의 아이템이 하나의 냉장고에 존재
     @ManyToOne
     @JoinColumn(name = "fridge_id")
-    private FridgeEntity fridgeEntity;
+    private Fridge fridgeEntity;
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate; // 날짜
