@@ -1,57 +1,57 @@
 package com.kaya.yatang.db.entity;
 
+import com.kaya.yatang.code.LoginType;
 import com.kaya.yatang.code.Role;
-import com.kaya.yatang.dto.UserDTO;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import org.springframework.context.annotation.Role;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Setter
-@Getter
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(unique = true)
-    private String userid;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    @Column
-    private String userpw;
+    @Column(nullable = false)
+    private String password;
 
-    @Column
-    private String nickname;
+    @Column(unique = true, nullable = false)
+    private String nickname; // 닉네임 추가
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private LoginType loginType = LoginType.NORMAL;
 
-    @OneToOne(mappedBy = "user")
-    private Fridge fridgeEntity;
+    private String socialId;
 
-    // 회원가입
-    public static User toUserEntity(UserDTO userDTO) {
-        User userEntity = new User();
-        userEntity.setUsername(userDTO.getUsername());
-        userEntity.setUserid(userDTO.getUserid());
-        userEntity.setUserpw(userDTO.getUserpw());
-        userEntity.setNickname(userDTO.getNickname());
-        return userEntity;
-    }
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    // 닉네임 설정
-    public static User toUpdateUserEntity(UserDTO userDTO) {
-        User userEntity = new User();
-        userEntity.setId(userDTO.getId());
-        userEntity.setUsername(userDTO.getUsername());
-        userEntity.setUserid(userDTO.getUserid());
-        userEntity.setUserpw(userDTO.getUserpw());
-        userEntity.setNickname(userDTO.getNickname());
-        return userEntity;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Fridge> fridges = new ArrayList<>();
+
+    public void addFridge(Fridge fridge) {
+        fridges.add(fridge);
+        fridge.setUser(this);
     }
 }
