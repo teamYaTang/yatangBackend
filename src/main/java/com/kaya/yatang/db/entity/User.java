@@ -34,7 +34,7 @@ public class User {
     private String password;
 
     @Column(unique = true, nullable = false)
-    private String nickname; // 닉네임 추가
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     private LoginType loginType = LoginType.NORMAL;

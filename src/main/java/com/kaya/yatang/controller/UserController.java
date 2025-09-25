@@ -1,86 +1,90 @@
 package com.kaya.yatang.controller;
 
 import com.kaya.yatang.dto.UserDTO;
+import com.kaya.yatang.dto.request.NicknameUpdateRequest;
+import com.kaya.yatang.dto.request.SignupRequest;
+import com.kaya.yatang.dto.response.SignupResponse;
 import com.kaya.yatang.service.UserService;
-import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
-    // 회원가입 페이지
-    @GetMapping("/account/register")
-    public String registerForm() { return "register"; }
-
-    @PostMapping("/account/register")
-    public String register(@ModelAttribute UserDTO userDTO) {
-        userService.save(userDTO);
-//        UserDTO registerResult = userService.save(userDTO);
-
-        return "home";
+    /**
+     * 회원가입
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest request) {
+        SignupResponse response = userService.signup(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 로그인 페이지
-    @GetMapping("/account/login")
-    public String loginForm() { return "login"; }
+    /**
+     * 닉네임 업데이트
+     */
+    @PatchMapping("/{userId}/nickname")
+    public ResponseEntity<UserDTO> updateNickname(
+        @PathVariable Long userId,
+        @RequestBody NicknameUpdateRequest request) {
 
-    @PostMapping("/account/login")
-    public String login(@ModelAttribute UserDTO userDTO, HttpSession session) {
-        UserDTO loginResult = userService.login(userDTO);
-        if (loginResult != null) {
-            // 성공! 닉네임 있을 때 -> 냉장고 & 닉네임 없을 때 -> 닉네임
-            session.setAttribute("loginId", loginResult.getUserid());
-//            session.setAttribute("loginName", loginResult.getUsername());
-            return "main";
-        } else {
-            // 실패!
-            return "home";
-        }
+        UserDTO updatedUser = userService.updateNickname(userId, request);
+        return ResponseEntity.ok(updatedUser);
     }
 
-    // 닉네임 설정
-    @GetMapping("/account/nickname")
-    public String nicknameForm(HttpSession session, Model model) {
-        String myUserid = (String) session.getAttribute("loginId");
-//        String myName = (String) session.getAttribute("loginName");
-        UserDTO userDTO = userService.nicknameForm(myUserid);
-        model.addAttribute("setNickname", userDTO);
-        return "nickname";
+    /**
+     * 내 정보 조회 (DTO 반환)
+     */
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<UserDTO> getUserProfile(@PathVariable Long userId) {
+        UserDTO userProfile = userService.getUserProfile(userId);
+        return ResponseEntity.ok(userProfile);
     }
 
-    @PostMapping("/account/nickname")
-    public String nickname(@ModelAttribute UserDTO userDTO) {
-        userService.nickname(userDTO);
-//        return "redirect:/user/" + userDTO.getId();
-        return "main";
+    /**
+     * 닉네임 중복 확인
+     */
+    @GetMapping("/check-nickname")
+    public ResponseEntity<Map<String, Object>> checkNickname(@RequestParam String nickname) {
+        boolean isAvailable = !userService.isNicknameExists(nickname);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("available", isAvailable);
+
+        return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/account/nickname")
-//    public String nicknameForm(Model model, Authentication authentication) {
-//        UserDet
-//    }
+    /**
+     * 이메일 중복 확인
+     */
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Object>> checkEmail(@RequestParam String email) {
+        boolean isAvailable = !userService.isEmailExists(email);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("available", isAvailable);
 
-    // 로그아웃
-    @GetMapping("/account/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "home";
+        return ResponseEntity.ok(response);
     }
 
-    // 아이디 체크
-    @PostMapping("/account/userid-check")
-    public @ResponseBody String useridCheck(@RequestParam("userid") String userid) {
-        System.out.println("userid = " + userid);
-        String checkResult = userService.useridCheck(userid);
-        return checkResult;
+    /**
+     * 사용자명 중복 확인
+     */
+    @GetMapping("/check-username")
+    public ResponseEntity<Map<String, Object>> checkUsername(@RequestParam String username) {
+        boolean isAvailable = !userService.isUsernameExists(username);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("available", isAvailable);
+
+        return ResponseEntity.ok(response);
     }
 }

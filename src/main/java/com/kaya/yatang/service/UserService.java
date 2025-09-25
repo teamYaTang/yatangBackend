@@ -1,9 +1,17 @@
 package com.kaya.yatang.service;
 
+import com.kaya.yatang.code.LoginType;
+import com.kaya.yatang.db.entity.Fridge;
+import com.kaya.yatang.db.repository.FridgeRepository;
 import com.kaya.yatang.dto.UserDTO;
 import com.kaya.yatang.db.entity.User;
 import com.kaya.yatang.db.repository.UserRepository;
+import com.kaya.yatang.dto.request.NicknameUpdateRequest;
+import com.kaya.yatang.dto.request.SignupRequest;
+import com.kaya.yatang.dto.response.SignupResponse;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,67 +19,131 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
+    private final FridgeRepository fridgeRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public void save(UserDTO userDTO) {
-        userDTO.setUserpw(passwordEncoder.encode(userDTO.getUserpw()));
-        User userEntity = User.toUserEntity(userDTO);
-        userRepository.save(userEntity);
-    }
-
-    public UserDTO login(UserDTO userDTO) {
-        Optional<User> byUserid = userRepository.findByUserid(userDTO.getUserid());
-
-        if (byUserid.isPresent()) {
-            User userEntity = byUserid.get();
-
-            if (passwordEncoder.matches(userDTO.getUserpw(), userEntity.getUserpw())) {
-//            if (userEntity.getUserpw().equals(userDTO.getUserpw())) {     // 암호화 X
-                // 비밀번호 일치
-                UserDTO dto = UserDTO.toUserDTO(userEntity);
-                return dto;
-            } else {
-                // 비밀번호 불일치
-                return null;
-            }
-        } else {
-            return null;
+    /**
+     * 일반 회원가입 (냉장고 자동 생성)
+     */
+    public SignupResponse signup(SignupRequest request) {
+        // 최소한의 서버 검증만 (보안 목적)
+        if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-    }
 
-    public UserDTO findById(Long id) {
-        Optional<User> optionalUserEntity = userRepository.findById(id);
-        if (optionalUserEntity.isPresent()) {
-            return UserDTO.toUserDTO(optionalUserEntity.get());
-        } else {
-            return null;
+        // 중복 확인 (데이터 무결성)
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-    }
 
-    public UserDTO nicknameForm(String myUserid) {
-        Optional<User> optionalUserEntity = userRepository.findByUserid(myUserid);
-        if (optionalUserEntity.isPresent()) {
-            return UserDTO.toUserDTO(optionalUserEntity.get());
-        } else {
-            return null;
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("이미 존재하는 사용자명입니다.");
         }
+
+        // 임시 닉네임 생성
+        String tempNickname = generateTempNickname();
+
+        // 사용자 생성
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setNickname(tempNickname);
+        user.setLoginType(LoginType.NORMAL);
+
+        User savedUser = userRepository.save(user);
+
+        // 메인 냉장고 생성 (OneToMany 설계에 맞춤)
+        Fridge mainFridge = createMainFridge(savedUser);
+
+        return new SignupResponse(
+            savedUser.getId(),
+            savedUser.getEmail(),
+            savedUser.getUsername(),
+            savedUser.getNickname(),
+            mainFridge.getId(),
+            "회원가입이 완료되었습니다.",
+            savedUser.getCreatedAt()
+        );
     }
 
-    public void nickname(UserDTO userDTO) {
-        userRepository.save(User.toUpdateUserEntity(userDTO));
-    }
+    /**
+     * 닉네임 업데이트
+     */
+    public UserDTO updateNickname(Long userId, NicknameUpdateRequest request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-    public String useridCheck(String userid) {
-        Optional<User> byUserid = userRepository.findByUserid(userid);
-        if (byUserid.isPresent()) {
-            return null;
-        } else {
-            return "ok";
+        // 닉네임 중복 확인 (데이터 무결성)
+        if (userRepository.existsByNicknameAndIdNot(request.getNickname(), userId)) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
+
+        user.setNickname(request.getNickname());
+        User updatedUser = userRepository.save(user);
+
+        return new UserDTO(updatedUser);
+    }
+
+    /**
+     * 사용자 정보 조회 (DTO 반환)
+     */
+    @Transactional(readOnly = true)
+    public UserDTO getUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        return new UserDTO(user);
+    }
+
+    // 임시 닉네임 생성
+    private String generateTempNickname() {
+        String tempNickname;
+        do {
+            String uuid = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+            tempNickname = "user_" + uuid;
+        } while (userRepository.existsByNickname(tempNickname)); // 중복 방지
+        return tempNickname;
+    }
+
+    /**
+     * 닉네임 존재 여부 확인
+     */
+    @Transactional(readOnly = true)
+    public boolean isNicknameExists(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    /**
+     * 이메일 존재 여부 확인
+     */
+    @Transactional(readOnly = true)
+    public boolean isEmailExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    /**
+     * 사용자명 존재 여부 확인
+     */
+    @Transactional(readOnly = true)
+    public boolean isUsernameExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    /**
+     * 메인 냉장고 생성 (OneToMany 설계)
+     */
+    private Fridge createMainFridge(User user) {
+        Fridge mainFridge = new Fridge();
+        mainFridge.setName("메인 냉장고");
+        mainFridge.setDescription("회원가입시 자동으로 생성된 냉장고입니다.");
+        mainFridge.setUser(user);
+
+        return fridgeRepository.save(mainFridge);
     }
 }
