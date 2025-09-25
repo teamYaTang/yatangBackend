@@ -1,5 +1,6 @@
 package com.kaya.yatang.db.entity;
 
+import com.kaya.yatang.code.StorageType;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -41,6 +42,10 @@ public class FridgeItem {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StorageType storageType;  // 냉장/냉동 구분
 
     // FridgeItem -> Fridge (ManyToOne)
     @ManyToOne(fetch = FetchType.LAZY)
