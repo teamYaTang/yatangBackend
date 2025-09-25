@@ -1,45 +1,39 @@
 package com.kaya.yatang.db.entity;
 
-import com.kaya.yatang.domain.item.ItemEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "fridge")
 @Getter
 @Setter
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Fridge {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @OneToOne
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(length = 255)
+    private String description;
+
+    @Column(name = "create_date", nullable = false)
+    private LocalDate createDate;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // 🔹 User(소유자) 관계 (ManyToOne)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
-
-    @Builder.Default
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<ItemEntity> itemEntityList = new ArrayList<>();
-
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
-    private LocalDate createDate; // 날짜
-
-    @PrePersist
-    public void createDate(){
-        this.createDate = LocalDate.now();
-    }
-
-    public static Fridge createFridge(User userEntity){
-        Fridge fridgeEntity = new Fridge();
-        fridgeEntity.user = userEntity;
-
-        return fridgeEntity;
-    }
+    private User user;
 }
