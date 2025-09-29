@@ -44,10 +44,10 @@ public class UserApiController {
 
         System.out.println(user);
 
-        User userEntity = userRepository.findByUserid(user.get("userid"))
+        User userEntity = userRepository.findByUserid(user.get("id"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디입니다."));
 
-        System.out.println(user.get("userid"));
+        System.out.println(user.get("id"));
 
 //        암호화 되지 않은 비밀번호
 //        if (!userEntity.getUserpw().equals(user.get("userpw"))) {
@@ -55,13 +55,13 @@ public class UserApiController {
 //        }
 
 //        암호화 된 비밀번호
-        if (!passwordEncoder.matches(user.get("userpw"), userEntity.getUserpw())) {
+        if (!passwordEncoder.matches(user.get("password"), userEntity.getPassword())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 맞지 않습니다.");
         } else {
-            System.out.println(user.get("userid"));
-            System.out.println(user.get("userpw"));
+            System.out.println(user.get("id"));
+            System.out.println(user.get("password"));
         }
 
-        return jwtTokenProvider.createToken(userEntity.getUserid(), userEntity.getRole());
+        return jwtTokenProvider.createToken(userEntity.getId(), userEntity.getUsername());
     }
 }
