@@ -17,10 +17,10 @@ public class SecurityUserDetailService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        Optional<User> optional = userRepository.findByUserid(userid);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> optional = userRepository.findByUsername(username);
         if(!optional.isPresent()) {
-            throw new UsernameNotFoundException(userid + " 사용자 없음");
+            throw new UsernameNotFoundException(username + " 사용자 없음");
         } else {
             User userEntity = optional.get();
             return new SecurityUser(userEntity);

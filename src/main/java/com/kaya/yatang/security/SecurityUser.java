@@ -7,8 +7,9 @@ public class SecurityUser extends org.springframework.security.core.userdetails.
     private User userEntity;
 
     public SecurityUser(User userEntity) {
-        super(userEntity.getUserid().toString(), userEntity.getUserpw(),
-                AuthorityUtils.createAuthorityList(userEntity.getRole().toString()));
+        super(userEntity.getId().toString(), userEntity.getPassword(),
+                AuthorityUtils.createAuthorityList(userEntity.getUsername()));
+//                AuthorityUtils.createAuthorityList(userEntity.getRole().toString()));
         this.userEntity = userEntity;
     }
 

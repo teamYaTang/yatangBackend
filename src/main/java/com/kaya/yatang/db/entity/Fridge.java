@@ -34,6 +34,56 @@ public class Fridge {
 
     // 🔹 User(소유자) 관계 (ManyToOne)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    // 🔹 냉장실 아이템들 (OneToMany)
+    @Builder.Default
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FridgeItem> fridgeItems = new ArrayList<>();
+
+    // 🔹 냉동실 아이템들 (OneToMany)
+    @Builder.Default
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FreezerItem> freezerItems = new ArrayList<>();
+
+    // 🔹 생성일 자동 설정
+    @PrePersist
+    public void prePersist() {
+        this.createDate = LocalDate.now();
+    }
+
+    // 🔹 수정일 자동 업데이트
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // 🔹 편의 메서드 - 냉장실 아이템 추가
+    public void addFridgeItem(FridgeItem item) {
+        fridgeItems.add(item);
+        item.setFridge(this);
+    }
+
+    // 🔹 편의 메서드 - 냉동실 아이템 추가
+    public void addFreezerItem(FreezerItem item) {
+        freezerItems.add(item);
+        item.setFridge(this);
+    }
+
+    // 🔹 정적 팩토리 메서드 - 일반 냉장고 생성
+    public static Fridge createFridge(User user, String name, String description) {
+        return Fridge.builder()
+            .name(name)
+            .description(description)
+            .user(user)
+            .fridgeItems(new ArrayList<>())
+            .freezerItems(new ArrayList<>())
+            .build();
+    }
+
+    // 🔹 정적 팩토리 메서드 - 메인 냉장고 생성
+    public static Fridge createMainFridge(User user) {
+        return createFridge(user, "메인 냉장고", "회원가입시 자동으로 생성된 냉장고입니다.");
+    }
 }
